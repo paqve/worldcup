@@ -8,34 +8,33 @@ echo -e "\nTotal number of goals in all games from winning teams:"
 echo "$($PSQL "SELECT SUM(winner_goals) FROM games")"
 
 echo -e "\nTotal number of goals in all games from both teams combined:"
-echo
+echo "$($PSQL "SELECT sum(winner_goals + opponent_goals) FROM games")"
 
 echo -e "\nAverage number of goals in all games from the winning teams:"
-echo
+echo "$($PSQL "SELECT avg(winner_goals) FROM games")"
 
 echo -e "\nAverage number of goals in all games from the winning teams rounded to two decimal places:"
-echo
+echo "$($PSQL "SELECT ROUND(avg(winner_goals), 2) FROM games")"
 
 echo -e "\nAverage number of goals in all games from both teams:"
-echo
+echo "$($PSQL "SELECT avg(winner_goals + opponent_goals) FROM games")"
 
 echo -e "\nMost goals scored in a single game by one team:"
-echo
+echo "$($PSQL "SELECT max(winner_goals) FROM games")"
 
 echo -e "\nNumber of games where the winning team scored more than two goals:"
-echo
+echo "$($PSQL "SELECT count(*) FROM games WHERE winner_goals > 2")"
 
 echo -e "\nWinner of the 2018 tournament team name:"
-echo
+echo "$($PSQL "SELECT name FROM games left join teams ON games.winner_id=teams.team_id WHERE round='Final' AND year=2018" )"
 
 echo -e "\nList of teams who played in the 2014 'Eighth-Final' round:"
-echo
-
+echo "$($PSQL "SELECT name as zz FROM games left join teams a ON games.winner_id=a.team_id   WHERE round='Eighth-Final' AND year=2014 UNION ALL SELECT name FROM games left join teams  ON games.opponent_id=teams.team_id  WHERE round='Eighth-Final' AND year=2014 ORDER BY zz" )"
 echo -e "\nList of unique winning team names in the whole data set:"
-echo
+echo "$($PSQL "SELECT DISTINCT(name) FROM games left join teams ON games.winner_id=teams.team_id ORDER BY name" )"
 
 echo -e "\nYear and team name of all the champions:"
-echo
+echo "$($PSQL "SELECT year, name FROM games FULL JOIN  teams ON games.winner_id=teams.team_id WHERE round='Final' ORDER BY year")"
 
 echo -e "\nList of teams that start with 'Co':"
-echo
+echo "$($PSQL "SELECT name from teams WHERE name like 'Co%'")"
